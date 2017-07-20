@@ -19,20 +19,8 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.poalim.openshift.account.controller"))
+                .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build();
-    }
-
-    private ApiInfo apiInfo() {
-        ApiInfo apiInfo = new ApiInfo(
-                "Accounts REST API",
-                "Osher Atias is the man",
-                "1.0",
-                "",
-                "lech@hapes.com",
-                "MIT",
-                "API license URL");
-        return apiInfo;
     }
 }

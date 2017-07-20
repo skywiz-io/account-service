@@ -11,6 +11,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface AccountRepository extends CrudRepository<Account, Integer> {
     Optional<Account> findById(Integer id);
-    List<Account> findByName(String name);
+    Optional<List<Account>> findByFullName(String name);
 }
 

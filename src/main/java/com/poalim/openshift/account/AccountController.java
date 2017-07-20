@@ -3,7 +3,6 @@ package com.poalim.openshift.account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,21 +23,21 @@ public class AccountController {
     private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     @Autowired
-    private AccountService service;
+    private AccountService accountService;
 
 
     @RequestMapping(value = "/{accountId}", method = RequestMethod.GET)
     public ResponseEntity<Account> findById(@PathVariable("accountId") final Integer accountId) {
 
         logger.info("AccountController-findById: {}", accountId);
-        return new ResponseEntity<>(this.service.findAccountById(accountId), HttpStatus.OK);
+        return new ResponseEntity<>(accountService.findAccountById(accountId), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/name={name}", method = RequestMethod.GET)
     public ResponseEntity<List<Account>> findByName(@PathVariable("name") String name) {
 
         logger.info("AccountController-findByName: {}", name);
-        List<Account> accountsFound = this.service.findAccountsByName(name);
+        List<Account> accountsFound = this.accountService.findAccountsByName(name);
         return new ResponseEntity<>((accountsFound == null ? new ArrayList<Account>() : accountsFound), HttpStatus.OK);
 
     }
@@ -49,9 +48,9 @@ public class AccountController {
 
         logger.info("AccountController-createAccount: {}", account);
 
-        Integer accountId = this.service.createAccount(account);
+        Integer accountId = this.accountService.createAccount(account);
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setLocation(builder.path("/account/{id}").buildAndExpand(accountId).toUri());
+        responseHeaders.setLocation(builder.path("/accounts/{id}").buildAndExpand(accountId).toUri());
         return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
     }
 
@@ -61,9 +60,9 @@ public class AccountController {
 
         logger.info("AccountController-updateAccount: {}", account);
 
-        Integer accountId = this.service.updateAccount(account);
+        Integer accountId = this.accountService.updateAccount(account);
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setLocation(builder.path("/account/{id}").buildAndExpand(accountId).toUri());
+        responseHeaders.setLocation(builder.path("/accounts/{id}").buildAndExpand(accountId).toUri());
         return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
     }
 
@@ -72,33 +71,7 @@ public class AccountController {
 
         logger.info("AccountController-deleteAccount: {}", account);
 
-        Account deletedAccount = this.service.deleteAccount(account);
+        Account deletedAccount = this.accountService.deleteAccount(account);
         return new ResponseEntity<>(deletedAccount, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/{accountId}/addFunds", method = RequestMethod.POST)
-    public ResponseEntity<String> addFunds(@PathVariable("accountId") final Integer accountId,
-                                           @RequestParam BigDecimal amount,
-                                           UriComponentsBuilder builder) {
-
-        logger.info("AccountController-addFunds: account: {}, amount:{}", accountId, amount);
-        this.service.addFunds(accountId, amount);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setLocation(builder.path("/account/{id}").buildAndExpand(accountId).toUri());
-        return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
-
-    }
-
-    @RequestMapping(value = "/{accountId}/withdrawalFunds", method = RequestMethod.POST)
-    public ResponseEntity<String> withdrawalFunds(@PathVariable("accountId") final Integer accountId,
-                                           @RequestParam BigDecimal amount,
-                                           UriComponentsBuilder builder) {
-
-        logger.info("AccountController-addFunds: account: {}, amount:{}", accountId, amount);
-        this.service.withdrawalFunds(accountId, amount);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setLocation(builder.path("/account/{id}").buildAndExpand(accountId).toUri());
-        return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
-
     }
 }

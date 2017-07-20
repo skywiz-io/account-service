@@ -1,6 +1,6 @@
 package com.poalim.openshift.account;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.poalim.openshift.exception.ResourceNotFoundException;
@@ -20,75 +20,53 @@ public class AccountService {
     private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
 
     @Autowired
-    AccountRepository accounts;
+    private AccountRepository accountRepository;
 
     public Account findAccountById(Integer accountId) {
-
         logger.debug("AccountService-findById: id={}", accountId);
-
-        return accounts.findById(accountId).orElseThrow(() ->
+        return this.accountRepository.findById(accountId).orElseThrow(() ->
                 new ResourceNotFoundException("Acoount not found:" + accountId));
     }
 
     public List<Account> findAccountsByName(String name) {
-
-        logger.debug("AccountService-findAccountsByName: name={}", name);
-        List<Account> accountList = accounts.findByName(name);
-        logger.debug("Found " + accountList.size() + " account(s).");
-
-        return accountList;
+        logger.debug("AccountService-findAccountsByName: fullname={}", name);
+        return this.accountRepository.findByFullName(name).orElse(new ArrayList<>());
     }
 
     public Integer createAccount(Account account) {
         logger.debug("AccountService-createAccount: account: {}", account.toString());
-
         Account newAccount = new Account();
-        newAccount.setUserid(account.getUserid());
-
+        newAccount.setUserId(account.getUserId());
         this.updateAccountProperties(newAccount, account);
-
         return this.save(newAccount).getId();
     }
 
     public Integer updateAccount(Account account) {
-
         logger.debug("AccountService-updateAccount: account: {}", account.toString());
         Account toUpdate = this.findAccountById(account.getId());
-
         this.updateAccountProperties(toUpdate, account);
-
         return this.save(toUpdate).getId();
     }
 
     public Account deleteAccount(Account account) {
-
         logger.debug("AccountService-deleteAccount: account: {}", account.toString());
         Account toUpdate = this.findAccountById(account.getId());
-
         return this.delete(toUpdate);
-    }
-
-    public void addFunds(Integer accountId, BigDecimal amount) {
-        logger.debug("AccountService-addFunds: account: {}, amount: {}", accountId, amount);
-        this.findAccountById(accountId).addFunds(amount);
-    }
-
-    public void withdrawalFunds(Integer accountId, BigDecimal amount) {
-        logger.debug("AccountService-addFunds: account: {}, amount: {}", accountId, amount);
-        this.findAccountById(accountId).withdrawalFunds(amount);
     }
 
     private void updateAccountProperties(Account toUpdate, Account newData) {
         // Only update allowed properties
-        toUpdate.setName(newData.getName());
+        toUpdate.setFullName(newData.getFullName());
+        toUpdate.setEmail(newData.getEmail());
+        toUpdate.setAddress(newData.getAddress());
     }
 
     private Account save(Account account) {
-        return accounts.save(account);
+        return accountRepository.save(account);
     }
 
     private Account delete(Account account) {
-        accounts.delete(account);
+        accountRepository.delete(account);
         return account;
     }
 }

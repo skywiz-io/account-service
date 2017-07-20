@@ -14,6 +14,7 @@ import java.util.Date;
 /**
  * Created by osher on 19/7/17.
  */
+
 @Data
 @Entity
 public class Account {
@@ -23,35 +24,32 @@ public class Account {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "userid", nullable = false, length = 250)
-    private String userid;
+    @Column(name = "user_id", nullable = false, length = 250)
+    private String userId;
 
-    @Column(name = "name", nullable = false, length = 250)
-    private String name;
+    @Column(name = "full_name", nullable = false, length = 250)
+    private String fullName;
 
-    @Column(name = "creationdate", nullable = false)
+    @Column(name = "creation_date", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
-    private Date creationdate;
+    private Date creationDate;
 
     @Column(name = "balance", precision = 14, scale = 2, nullable=false)
     private BigDecimal balance = new BigDecimal(0);
 
+    @Column(name = "address", nullable = false, length = 250)
+    private String address;
+
+    @Column(name = "email", length = 250)
+    private String email;
+
     @PrePersist
-    void creationdate() {
-        this.creationdate = new Date();
+    private void creationdate() {
+        this.creationDate = new Date();
     }
 
     private synchronized void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
-
-    public void addFunds(BigDecimal amount) {
-        this.setBalance(this.getBalance().add(amount));
-    }
-
-    public void withdrawalFunds(BigDecimal amount) {
-        this.setBalance(this.getBalance().subtract(amount));
-    }
-
 }
