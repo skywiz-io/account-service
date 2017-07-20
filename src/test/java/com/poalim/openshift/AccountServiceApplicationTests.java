@@ -1,4 +1,4 @@
-package com.poalim.openshift.account;
+package com.poalim.openshift;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

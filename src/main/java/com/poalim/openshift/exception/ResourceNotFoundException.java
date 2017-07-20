@@ -1,4 +1,4 @@
-package com.poalim.openshift.account.exception;
+package com.poalim.openshift.exception;
 
 /**
  * Created by osher on 19/7/17.

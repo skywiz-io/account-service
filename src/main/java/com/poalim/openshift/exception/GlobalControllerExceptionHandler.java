@@ -1,4 +1,4 @@
-package com.poalim.openshift.account.exception;
+package com.poalim.openshift.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;

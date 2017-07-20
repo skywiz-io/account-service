@@ -1,4 +1,4 @@
-package com.poalim.openshift.account.domain;
+package com.poalim.openshift.account;
 
 
 import lombok.Data;
@@ -36,4 +36,22 @@ public class Account {
 
     @Column(name = "balance", precision = 14, scale = 2, nullable=false)
     private BigDecimal balance = new BigDecimal(0);
+
+    @PrePersist
+    void creationdate() {
+        this.creationdate = new Date();
+    }
+
+    private synchronized void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public void addFunds(BigDecimal amount) {
+        this.setBalance(this.getBalance().add(amount));
+    }
+
+    public void withdrawalFunds(BigDecimal amount) {
+        this.setBalance(this.getBalance().subtract(amount));
+    }
+
 }

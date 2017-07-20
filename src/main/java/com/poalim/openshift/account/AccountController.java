@@ -1,29 +1,22 @@
-package com.poalim.openshift.account.controller;
+package com.poalim.openshift.account;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.poalim.openshift.account.domain.Account;
-import com.poalim.openshift.account.service.AccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Created by osher on 19/7/17.
  */
-
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
@@ -34,11 +27,11 @@ public class AccountController {
     private AccountService service;
 
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Account> findById(@PathVariable("id") final Integer id) {
+    @RequestMapping(value = "/{accountId}", method = RequestMethod.GET)
+    public ResponseEntity<Account> findById(@PathVariable("accountId") final Integer accountId) {
 
-        logger.info("AccountController-findById: {}", id);
-        return new ResponseEntity<>(this.service.findAccountById(id), HttpStatus.OK);
+        logger.info("AccountController-findById: {}", accountId);
+        return new ResponseEntity<>(this.service.findAccountById(accountId), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/name={name}", method = RequestMethod.GET)
@@ -81,5 +74,31 @@ public class AccountController {
 
         Account deletedAccount = this.service.deleteAccount(account);
         return new ResponseEntity<>(deletedAccount, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{accountId}/addFunds", method = RequestMethod.POST)
+    public ResponseEntity<String> addFunds(@PathVariable("accountId") final Integer accountId,
+                                           @RequestParam BigDecimal amount,
+                                           UriComponentsBuilder builder) {
+
+        logger.info("AccountController-addFunds: account: {}, amount:{}", accountId, amount);
+        this.service.addFunds(accountId, amount);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setLocation(builder.path("/account/{id}").buildAndExpand(accountId).toUri());
+        return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
+
+    }
+
+    @RequestMapping(value = "/{accountId}/withdrawalFunds", method = RequestMethod.POST)
+    public ResponseEntity<String> withdrawalFunds(@PathVariable("accountId") final Integer accountId,
+                                           @RequestParam BigDecimal amount,
+                                           UriComponentsBuilder builder) {
+
+        logger.info("AccountController-addFunds: account: {}, amount:{}", accountId, amount);
+        this.service.withdrawalFunds(accountId, amount);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setLocation(builder.path("/account/{id}").buildAndExpand(accountId).toUri());
+        return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
+
     }
 }

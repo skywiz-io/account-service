@@ -1,11 +1,9 @@
-package com.poalim.openshift.account.service;
+package com.poalim.openshift.account;
 
+import java.math.BigDecimal;
 import java.util.List;
 
-import com.poalim.openshift.account.repository.AccountRepository;
-import com.poalim.openshift.account.domain.Account;
-
-import com.poalim.openshift.account.exception.ResourceNotFoundException;
+import com.poalim.openshift.exception.ResourceNotFoundException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +66,16 @@ public class AccountService {
         Account toUpdate = this.findAccountById(account.getId());
 
         return this.delete(toUpdate);
+    }
+
+    public void addFunds(Integer accountId, BigDecimal amount) {
+        logger.debug("AccountService-addFunds: account: {}, amount: {}", accountId, amount);
+        this.findAccountById(accountId).addFunds(amount);
+    }
+
+    public void withdrawalFunds(Integer accountId, BigDecimal amount) {
+        logger.debug("AccountService-addFunds: account: {}, amount: {}", accountId, amount);
+        this.findAccountById(accountId).withdrawalFunds(amount);
     }
 
     private void updateAccountProperties(Account toUpdate, Account newData) {
