@@ -1,5 +1,6 @@
 package com.poalim.openshift.account;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 
 /**
  * Created by osher on 19/7/17.
@@ -54,6 +57,24 @@ public class AccountService {
         return this.delete(toUpdate);
     }
 
+    // TODO: Add some checks, obviously permission check, maybe credit limit? no minus?
+    @Transactional
+    public void addFunds(Integer accountId, BigDecimal amount) {
+        logger.debug("AccountService-addFunds: accountId: {}, amount: {}", accountId, amount);
+        Account account = this.findAccountById(accountId);
+        account.addFunds(amount);
+        this.save(account);
+    }
+
+    // TODO: Add some checks, obviously permission check, maybe credit limit? no minus?
+    @Transactional
+    public void withdrawalFunds(Integer accountId, BigDecimal amount) {
+        logger.debug("AccountService-withdrawalFunds: account: {}, amount: {}", accountId, amount);
+        Account account = this.findAccountById(accountId);
+        account.withdrawalFunds(amount);
+        this.save(account);
+    }
+
     private void updateAccountProperties(Account toUpdate, Account newData) {
         // Only update allowed properties
         toUpdate.setFullName(newData.getFullName());
@@ -61,10 +82,12 @@ public class AccountService {
         toUpdate.setAddress(newData.getAddress());
     }
 
+    @Transactional
     private Account save(Account account) {
         return accountRepository.save(account);
     }
 
+    @Transactional
     private Account delete(Account account) {
         accountRepository.delete(account);
         return account;

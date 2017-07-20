@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,19 +53,25 @@ public class TransactionService {
                 orElse(new ArrayList<>());
     }
 
-    public String makeTransacition(Integer fromAccount, Integer toAccount,
+    @Transactional
+    public String makeTransacition(Integer fromAccountId, Integer toAccountId,
                                     BigDecimal amount, String description) {
         logger.debug("TransactionService-makeTransacition: from: {}, to: {}, amount: {}",
-                new Object[] { fromAccount, toAccount, amount});
+                new Object[] { fromAccountId, toAccountId, amount});
+
+        accountService.withdrawalFunds(fromAccountId, amount);
+        accountService.addFunds(toAccountId, amount);
 
         Transaction transaction = new Transaction();
-        transaction.setFromAccount(accountService.findAccountById(fromAccount));
-        transaction.setToAccount(accountService.findAccountById(toAccount));
+        transaction.setFromAccount(accountService.findAccountById(fromAccountId));
+        transaction.setToAccount(accountService.findAccountById(toAccountId));
         transaction.setAmount(amount);
         transaction.setDescription(description);
+
         return this.save(transaction).getId();
     }
 
+    @Transactional
     private Transaction save(Transaction transaction) {
         return transactionRepository.save(transaction);
     }

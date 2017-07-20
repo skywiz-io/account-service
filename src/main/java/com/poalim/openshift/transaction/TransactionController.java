@@ -53,17 +53,16 @@ public class TransactionController {
         return new ResponseEntity<>(transactionsDTO, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{accountId}/transactions", method = RequestMethod.POST)
+    @RequestMapping(value = "/transactions", method = RequestMethod.POST)
     public ResponseEntity<List<TransactionDTO>> makeTransaction(
-            @PathVariable("accountId") final Integer accountId,
             @RequestBody final TransactionDTO transactionDTO,
             UriComponentsBuilder builder) {
 
-        logger.info("TransactionController-makeTransaction: accountId: {}, transaction: {}",
-                accountId, transactionDTO.toString());
-        String transactionId = this.transactionService.makeTransacition(accountId,
-                transactionDTO.getToAccountId(), transactionDTO.getAmount(),
-                transactionDTO.getDescription());
+        logger.info("TransactionController-makeTransaction: transaction: {}",
+                transactionDTO.toString());
+        String transactionId = this.transactionService.makeTransacition(
+                transactionDTO.getFromAccountId(), transactionDTO.getToAccountId(),
+                transactionDTO.getAmount(), transactionDTO.getDescription());
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(builder.path("/transactions/{id}").
                 buildAndExpand(transactionId).toUri());

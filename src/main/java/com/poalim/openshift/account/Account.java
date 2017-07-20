@@ -52,4 +52,12 @@ public class Account {
     private synchronized void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
+
+    public void addFunds(BigDecimal amount) {
+        this.setBalance(this.getBalance().add(amount));
+    }
+
+    public void withdrawalFunds(BigDecimal amount) {
+        this.setBalance(this.getBalance().subtract(amount));
+    }
 }
