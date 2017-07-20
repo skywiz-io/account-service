@@ -77,6 +77,7 @@ public class AccountService {
 
     private void updateAccountProperties(Account toUpdate, Account newData) {
         // Only update allowed properties
+        toUpdate.setUserId(newData.getUserId());
         toUpdate.setFullName(newData.getFullName());
         toUpdate.setEmail(newData.getEmail());
         toUpdate.setAddress(newData.getAddress());
