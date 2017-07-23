@@ -14,6 +14,7 @@ INSERT INTO `account` (`id`, `user_id`, `full_name`, `creation_date`, `balance`,
 INSERT INTO `account` (`id`, `user_id`, `full_name`, `creation_date`, `balance`, `address`, `email`) VALUES (9, 'aber', 'Aber Crombie', '2017-02-16 13:25:00',-3000.23, 'Hahorsim 71, Haifa 12', 'abercombie@gmail.com');
 INSERT INTO `account` (`id`, `user_id`, `full_name`, `creation_date`, `balance`, `address`, `email`) VALUES (10, 'kopa', 'Kopa Kabana', '2017-03-23 22:12:15',46745.00, 'Panini 20, Yavne', 'kopahopa@gmail.com');
 INSERT INTO `account` (`id`, `user_id`, `full_name`, `creation_date`, `balance`, `address`, `email`) VALUES (11, 'snow', 'Snow White', '2017-04-27 22:39:00',46650.06, 'Dizingof 2, Tel-Aviv', 'dwarfs@gmail.com');
+INSERT INTO `account` (`id`, `user_id`, `full_name`, `creation_date`, `balance`, `address`, `email`) VALUES (12, 'rambo', 'Rambo Man', '2017-06-12 12:23:00', 0, 'Supyo 32, NYC', 'rambo@gmail.com');
 
 INSERT INTO `transaction` (`id`, `amount`, `from_account_id`, `to_account_id`, `date`, `description`) VALUES ('1', 200, 1, 2, '2017-09-10 16:22:00', 'For you');
 INSERT INTO `transaction` (`id`, `amount`, `from_account_id`, `to_account_id`, `date`, `description`) VALUES ('2', 500, 1, 3, '2017-08-2 16:22:00', 'Good luck!');
