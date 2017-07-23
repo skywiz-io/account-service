@@ -33,11 +33,11 @@ public class AccountController {
         return new ResponseEntity<>(accountService.findAccountById(accountId), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/name={name}", method = RequestMethod.GET)
-    public ResponseEntity<List<Account>> findByName(@PathVariable("name") String name) {
+    @RequestMapping(value = "/fullname={fullname}", method = RequestMethod.GET)
+    public ResponseEntity<List<Account>> findByFullName(@PathVariable("fullname") String name) {
 
         logger.info("AccountController-findByName: {}", name);
-        List<Account> accountsFound = this.accountService.findAccountsByName(name);
+        List<Account> accountsFound = this.accountService.findAccountsByFullName(name);
         return new ResponseEntity<>((accountsFound == null ? new ArrayList<Account>() : accountsFound), HttpStatus.OK);
 
     }

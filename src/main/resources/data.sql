@@ -21,4 +21,4 @@ INSERT INTO `transaction` (`id`, `amount`, `from_account_id`, `to_account_id`, `
 INSERT INTO `transaction` (`id`, `amount`, `from_account_id`, `to_account_id`, `date`, `description`) VALUES ('4', 458, 9, 4, '2017-04-12 16:22:00', '');
 INSERT INTO `transaction` (`id`, `amount`, `from_account_id`, `to_account_id`, `date`, `description`) VALUES ('5', 288.54, 7, 6, '2017-07-14 16:22:00', 'moneyyyy');
 
-#CREATE INDEX balance ON `account`(`balance`,`userid`);
+#CREATE INDEX balance ON `account`(`balance`,`userid`);n

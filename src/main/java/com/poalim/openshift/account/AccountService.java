@@ -31,9 +31,9 @@ public class AccountService {
                 new ResourceNotFoundException("Acoount not found:" + accountId));
     }
 
-    public List<Account> findAccountsByName(String name) {
-        logger.debug("AccountService-findAccountsByName: fullname={}", name);
-        return this.accountRepository.findByFullName(name).orElse(new ArrayList<>());
+    public List<Account> findAccountsByFullName(String fullName) {
+        logger.debug("AccountService-findAccountsByFullName: fullname={}", fullName);
+        return this.accountRepository.findByFullNameIgnoreCaseContaining(fullName).orElse(new ArrayList<>());
     }
 
     public Integer createAccount(Account account) {
