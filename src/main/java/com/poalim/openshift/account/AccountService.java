@@ -28,7 +28,7 @@ public class AccountService {
     public Account findAccountById(Integer accountId) {
         logger.debug("AccountService-findById: id={}", accountId);
         return this.accountRepository.findById(accountId).orElseThrow(() ->
-                new ResourceNotFoundException("Acoount not found:" + accountId));
+                new ResourceNotFoundException("Account not found:" + accountId));
     }
 
     public List<Account> findAccountsByFullName(String fullName) {

@@ -34,18 +34,6 @@ public class TransactionService {
                 new ResourceNotFoundException("Transaction not found:" + id));
     }
 
-    public List<Transaction> findByFromAccount(Account account) {
-        logger.debug("TransactionService-findByFromAccount: account={}", account.toString());
-        return transactionRepository.findByFromAccount(account).
-                orElse(new ArrayList<>());
-    }
-
-    public List<Transaction> findByToAccount(Account account) {
-        logger.debug("TransactionService-findByToAccount: account={}", account.toString());
-        return transactionRepository.findByToAccount(account).
-                orElse(new ArrayList<>());
-    }
-
     public List<Transaction> findByToAccountOrFromAccount(Account fromAccount, Account toAccount) {
         logger.debug("TransactionService-findByToAccountOrFromAccount: fromAccount={}, toAccount={}",
                 fromAccount.toString(), toAccount.toString());
@@ -54,9 +42,9 @@ public class TransactionService {
     }
 
     @Transactional
-    public String makeTransacition(Integer fromAccountId, Integer toAccountId,
+    public String makeTransaction(Integer fromAccountId, Integer toAccountId,
                                     BigDecimal amount, String description) {
-        logger.debug("TransactionService-makeTransacition: from: {}, to: {}, amount: {}",
+        logger.debug("TransactionService-makeTransaction: from: {}, to: {}, amount: {}",
                 new Object[] { fromAccountId, toAccountId, amount});
 
         accountService.withdrawalFunds(fromAccountId, amount);

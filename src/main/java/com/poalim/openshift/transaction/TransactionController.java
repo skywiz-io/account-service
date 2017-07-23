@@ -31,7 +31,7 @@ public class TransactionController {
     @Autowired
     private AccountService accountService;
 
-    private ModelMapper modelMapper = new ModelMapper(); // Make it a bean and autowire
+    private final ModelMapper modelMapper = new ModelMapper(); // Make it a bean and autowire
 
     @RequestMapping(value = "/transactions/{transactionId}", method = RequestMethod.GET)
     public ResponseEntity<TransactionDTO> findById(@PathVariable("transactionId") final String transactionId) {
@@ -60,7 +60,7 @@ public class TransactionController {
 
         logger.info("TransactionController-makeTransaction: transaction: {}",
                 transactionDTO.toString());
-        String transactionId = this.transactionService.makeTransacition(
+        String transactionId = this.transactionService.makeTransaction(
                 transactionDTO.getFromAccountId(), transactionDTO.getToAccountId(),
                 transactionDTO.getAmount(), transactionDTO.getDescription());
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -70,8 +70,7 @@ public class TransactionController {
     }
 
     private TransactionDTO convertToDto(Transaction transaction) {
-        TransactionDTO transactionDTO = modelMapper.map(transaction, TransactionDTO.class);
-        return transactionDTO;
+        return modelMapper.map(transaction, TransactionDTO.class);
     }
 
     private Transaction convertToEntity(TransactionDTO transactionDTO) {
