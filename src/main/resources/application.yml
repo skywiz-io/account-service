@@ -1,0 +1,13 @@
+spring:
+    datasource:
+        url: ${DB_URL}
+        username: ${DB_USER}
+        password: ${DB_PASSWORD}
+
+        # Keep the connection alive if idle for a long time (needed in production)
+        testWhileIdle: true
+        validationQuery: SELECT 1
+        initialize: true # Populate the database using 'data.sql'.
+    jpa:
+        hibernate.ddl-auto: update # create to recreate scheme
+        show-sql: false
