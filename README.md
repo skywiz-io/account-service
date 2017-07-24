@@ -15,7 +15,7 @@ docker run --name devops-accounts-mysql -e MYSQL_ROOT_PASSWORD=<my-pass> -e MYSQ
     
 ##### Run the App:
 ```
-docker run  --name devops-accounts-service -e DB_URL='jdbc:mysql://<my-server>:3306/accounts?useUnicode=true&characterEncoding=UTF-8' -e DB_USER='<my-user>' -e DB_PASSWORD='<my-pass>' -p8080:8080 docker-base.artifactory.restest.bank/account-service:1.0.0
+docker run --name devops-accounts-service -e DB_URL='jdbc:mysql://<my-server>:3306/accounts?useUnicode=true&characterEncoding=UTF-8' -e DB_USER='<my-user>' -e DB_PASSWORD='<my-pass>' -p8080:8080 docker-base.artifactory.restest.bank/account-service:1.0.0
 ```
 
 ### Live api test via swagger ui
