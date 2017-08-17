@@ -2,9 +2,10 @@ package com.poalim.openshift.transaction;
 
 import com.poalim.openshift.account.Account;
 import com.poalim.openshift.account.AccountService;
-import org.modelmapper.ModelMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by osher on 20/7/17.
@@ -31,7 +31,11 @@ public class TransactionController {
     @Autowired
     private AccountService accountService;
 
-
+    @RequestMapping(value = "/transactions", method = RequestMethod.GET)
+    public ResponseEntity<List<TransactionDTO>> findAll() {
+        logger.info("TransactionController-findAll");
+        return new ResponseEntity<>(this.transactionService.findAll(), HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/transactions/{transactionId}", method = RequestMethod.GET)
     public ResponseEntity<TransactionDTO> findById(@PathVariable("transactionId") final String transactionId) {

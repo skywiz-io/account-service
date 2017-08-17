@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -75,6 +74,7 @@ public class TransactionService {
         return modelMapper.map(transaction, TransactionDTO.class);
     }
 
+    /*
     private Transaction convertToEntity(TransactionDTO transactionDTO) {
         Transaction transaction = modelMapper.map(transactionDTO, Transaction.class);
         transaction.setFromAccount(accountService.
@@ -83,7 +83,7 @@ public class TransactionService {
                 findAccountById(transactionDTO.getToAccountId()));
 
         return transaction;
-    }
+    }*/
 
     @Transactional
     private Transaction save(Transaction transaction) {

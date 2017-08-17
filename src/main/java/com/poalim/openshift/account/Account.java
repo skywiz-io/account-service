@@ -1,6 +1,5 @@
 package com.poalim.openshift.account;
 
-
 import lombok.Data;
 
 import org.springframework.format.annotation.DateTimeFormat;

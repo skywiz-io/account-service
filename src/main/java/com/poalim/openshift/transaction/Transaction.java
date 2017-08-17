@@ -1,8 +1,10 @@
 package com.poalim.openshift.transaction;
 
 import com.poalim.openshift.account.Account;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 

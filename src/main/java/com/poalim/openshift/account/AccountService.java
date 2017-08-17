@@ -1,7 +1,6 @@
 package com.poalim.openshift.account;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +39,7 @@ public class AccountService {
 
     public List<Account> findAccountsByFullName(String fullName) {
         logger.debug("AccountService-findAccountsByFullName: fullname={}", fullName);
-        return this.accountRepository.findByFullNameIgnoreCaseContaining(fullName).orElse(new ArrayList<>());
+        return this.accountRepository.findByFullNameIgnoreCaseContaining(fullName).orElse(Collections.emptyList());
     }
 
     public Integer createAccount(Account account) {
