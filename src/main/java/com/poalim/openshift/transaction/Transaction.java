@@ -5,10 +5,11 @@ import com.poalim.openshift.account.Account;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.util.Date;
 

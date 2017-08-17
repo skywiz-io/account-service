@@ -70,6 +70,15 @@ public class TransactionService {
         return this.save(transaction).getId();
     }
 
+    @Transactional
+    public void deleteTransactionsByAccount(Account account) {
+        logger.debug("TransactionService-deleteTransactionsByAccount: account: {}", account);
+
+        transactionRepository.findByToAccountOrFromAccount(account, account).
+                orElse(Collections.emptyList()).forEach(transaction ->
+                transactionRepository.delete(transaction));
+    }
+
     private TransactionDTO convertToDto(Transaction transaction) {
         return modelMapper.map(transaction, TransactionDTO.class);
     }

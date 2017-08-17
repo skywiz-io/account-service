@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import com.poalim.openshift.exception.ResourceNotFoundException;
 
+import com.poalim.openshift.transaction.TransactionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private TransactionService transactionService;
+
     public List<Account> findAll() {
         logger.debug("AccountService-findAll");
         return Optional.ofNullable(accountRepository.findAll()).orElse(Collections.emptyList());
@@ -42,6 +46,7 @@ public class AccountService {
         return this.accountRepository.findByFullNameIgnoreCaseContaining(fullName).orElse(Collections.emptyList());
     }
 
+    @Transactional
     public Integer createAccount(Account account) {
         logger.debug("AccountService-createAccount: account: {}", account.toString());
         Account newAccount = new Account();
@@ -50,6 +55,7 @@ public class AccountService {
         return this.save(newAccount).getId();
     }
 
+    @Transactional
     public Integer updateAccount(Account account) {
         logger.debug("AccountService-updateAccount: account: {}", account.toString());
         Account toUpdate = this.findAccountById(account.getId());
@@ -57,10 +63,12 @@ public class AccountService {
         return this.save(toUpdate).getId();
     }
 
+    @Transactional
     public Account deleteAccount(Integer accountId) {
         logger.debug("AccountService-deleteAccount: accountId: {}", accountId);
-        Account toUpdate = this.findAccountById(accountId);
-        return this.delete(toUpdate);
+        Account toDelete = this.findAccountById(accountId);
+        transactionService.deleteTransactionsByAccount(toDelete);
+        return this.delete(toDelete);
     }
 
     // TODO: Add some checks, obviously permission check, maybe credit limit? no minus?
