@@ -31,14 +31,13 @@ public class TransactionController {
     @Autowired
     private AccountService accountService;
 
-    private final ModelMapper modelMapper = new ModelMapper(); // Make it a bean and autowire
+
 
     @RequestMapping(value = "/transactions/{transactionId}", method = RequestMethod.GET)
     public ResponseEntity<TransactionDTO> findById(@PathVariable("transactionId") final String transactionId) {
 
         logger.info("TransactionController-findById: {}", transactionId);
-        return new ResponseEntity<>(convertToDto(this.transactionService.findById(transactionId)),
-                HttpStatus.OK);
+        return new ResponseEntity<>(this.transactionService.findById(transactionId), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{accountId}/transactions", method = RequestMethod.GET)
@@ -47,10 +46,7 @@ public class TransactionController {
 
         logger.info("TransactionController-findByAccount: accountId: {}", accountId);
         Account account = this.accountService.findAccountById(accountId);
-        List<Transaction> transactions = this.transactionService.findByToAccountOrFromAccount(account, account);
-        List<TransactionDTO> transactionsDTO = transactions.stream().
-                map(transaction -> convertToDto(transaction)).collect(Collectors.toList());
-        return new ResponseEntity<>(transactionsDTO, HttpStatus.OK);
+        return new ResponseEntity<>(this.transactionService.findByToAccountOrFromAccount(account, account), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/transactions", method = RequestMethod.POST)
@@ -69,18 +65,5 @@ public class TransactionController {
         return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
     }
 
-    private TransactionDTO convertToDto(Transaction transaction) {
-        return modelMapper.map(transaction, TransactionDTO.class);
-    }
-
-    private Transaction convertToEntity(TransactionDTO transactionDTO) {
-        Transaction transaction = modelMapper.map(transactionDTO, Transaction.class);
-        transaction.setFromAccount(accountService.
-                findAccountById(transactionDTO.getFromAccountId()));
-        transaction.setToAccount(accountService.
-                findAccountById(transactionDTO.getToAccountId()));
-
-        return transaction;
-    }
 
 }

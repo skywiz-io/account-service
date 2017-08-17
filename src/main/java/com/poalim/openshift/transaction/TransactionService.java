@@ -3,6 +3,7 @@ package com.poalim.openshift.transaction;
 import com.poalim.openshift.account.Account;
 import com.poalim.openshift.account.AccountService;
 import com.poalim.openshift.exception.ResourceNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,10 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by osher on 20/7/17.
@@ -22,23 +26,31 @@ public class TransactionService {
 
     private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
 
+    private final ModelMapper modelMapper = new ModelMapper(); // Make it a bean and autowire
+
     @Autowired
     private AccountService accountService;
 
     @Autowired
     private TransactionRepository transactionRepository;
 
-    public Transaction findById(String id) {
+    public List<TransactionDTO> findAll() {
+        logger.debug("TransactionService-findAll");
+        return Optional.ofNullable(transactionRepository.findAll()).orElse(Collections.emptyList()).
+                stream().map(quote -> convertToDto(quote)).collect(Collectors.toList());
+    }
+
+    public TransactionDTO findById(String id) {
         logger.debug("TransactionService-findById: id={}", id);
-        return transactionRepository.findById(id).orElseThrow(() ->
+        return transactionRepository.findById(id).map(transaction -> convertToDto(transaction)).orElseThrow(() ->
                 new ResourceNotFoundException("Transaction not found:" + id));
     }
 
-    public List<Transaction> findByToAccountOrFromAccount(Account fromAccount, Account toAccount) {
+    public List<TransactionDTO> findByToAccountOrFromAccount(Account fromAccount, Account toAccount) {
         logger.debug("TransactionService-findByToAccountOrFromAccount: fromAccount={}, toAccount={}",
                 fromAccount.toString(), toAccount.toString());
         return transactionRepository.findByToAccountOrFromAccount(fromAccount, toAccount).
-                orElse(new ArrayList<>());
+                orElse(Collections.emptyList()).stream().map(transaction -> convertToDto(transaction)).collect(Collectors.toList());
     }
 
     @Transactional
@@ -57,6 +69,20 @@ public class TransactionService {
         transaction.setDescription(description);
 
         return this.save(transaction).getId();
+    }
+
+    private TransactionDTO convertToDto(Transaction transaction) {
+        return modelMapper.map(transaction, TransactionDTO.class);
+    }
+
+    private Transaction convertToEntity(TransactionDTO transactionDTO) {
+        Transaction transaction = modelMapper.map(transactionDTO, Transaction.class);
+        transaction.setFromAccount(accountService.
+                findAccountById(transactionDTO.getFromAccountId()));
+        transaction.setToAccount(accountService.
+                findAccountById(transactionDTO.getToAccountId()));
+
+        return transaction;
     }
 
     @Transactional

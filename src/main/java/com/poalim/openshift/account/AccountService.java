@@ -2,7 +2,9 @@ package com.poalim.openshift.account;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import com.poalim.openshift.exception.ResourceNotFoundException;
 
@@ -24,6 +26,11 @@ public class AccountService {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    public List<Account> findAll() {
+        logger.debug("AccountService-findAll");
+        return Optional.ofNullable(accountRepository.findAll()).orElse(Collections.emptyList());
+    }
 
     public Account findAccountById(Integer accountId) {
         logger.debug("AccountService-findById: id={}", accountId);
@@ -51,9 +58,9 @@ public class AccountService {
         return this.save(toUpdate).getId();
     }
 
-    public Account deleteAccount(Account account) {
-        logger.debug("AccountService-deleteAccount: account: {}", account.toString());
-        Account toUpdate = this.findAccountById(account.getId());
+    public Account deleteAccount(Integer accountId) {
+        logger.debug("AccountService-deleteAccount: accountId: {}", accountId);
+        Account toUpdate = this.findAccountById(accountId);
         return this.delete(toUpdate);
     }
 

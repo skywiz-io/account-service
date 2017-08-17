@@ -25,7 +25,6 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-
     @RequestMapping(value = "/{accountId}", method = RequestMethod.GET)
     public ResponseEntity<Account> findById(@PathVariable("accountId") final Integer accountId) {
 
@@ -33,13 +32,13 @@ public class AccountController {
         return new ResponseEntity<>(accountService.findAccountById(accountId), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/fullname={fullname}", method = RequestMethod.GET)
-    public ResponseEntity<List<Account>> findByFullName(@PathVariable("fullname") String name) {
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity<List<Account>> findByName(@RequestParam(value="name", required=false) String name) {
 
         logger.info("AccountController-findByName: {}", name);
-        List<Account> accountsFound = this.accountService.findAccountsByFullName(name);
-        return new ResponseEntity<>((accountsFound == null ? new ArrayList<Account>() : accountsFound), HttpStatus.OK);
-
+        List<Account> result = (name == null) ? this.accountService.findAll() :
+                this.accountService.findAccountsByFullName(name);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
@@ -66,12 +65,12 @@ public class AccountController {
         return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "", method = RequestMethod.DELETE)
-    public ResponseEntity<Account> deleteAccount(@RequestBody Account account) {
+    @RequestMapping(value = "/{accountId}", method = RequestMethod.DELETE)
+    public ResponseEntity<Account> deleteAccount(@PathVariable("accountId") final Integer accountId) {
 
-        logger.info("AccountController-deleteAccount: {}", account);
+        logger.info("AccountController-deleteAccount: accountId: {}", accountId);
 
-        Account deletedAccount = this.accountService.deleteAccount(account);
+        Account deletedAccount = this.accountService.deleteAccount(accountId);
         return new ResponseEntity<>(deletedAccount, HttpStatus.OK);
     }
 }
