@@ -1,8 +1,8 @@
 pipeline {
     agent {
         docker {
-            image 'evarga/jenkins-slave'
-            args '-v /var/run/docker.sock:/var/run/docker.sock --privileged -it'
+            image 'docker:stable-dind'
+            args '--privileged'
         }
     }
     stages {
