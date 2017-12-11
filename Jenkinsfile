@@ -6,6 +6,12 @@ pipeline {
         }
     }
     stages {
+        stage('Get docker') {
+            steps {
+                sh 'apk add docker'
+                sh 'service docker start'
+            }
+        }
         stage('Build') {
             steps {
                 sh 'docker images'
