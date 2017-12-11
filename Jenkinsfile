@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'twalter/maven-docker'
+            image 'evarga/jenkins-slave'
             args '-v /var/run/docker.sock:/var/run/docker.sock --privileged -it'
         }
     }
