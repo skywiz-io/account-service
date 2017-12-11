@@ -1,5 +1,8 @@
 pipeline { 
     agent none
+    environment {
+        App_Name    = 'account-service'
+    }
     stages {
         stage('Maven Build') {
             agent {
@@ -17,7 +20,9 @@ pipeline {
             agent any 
             steps {
                 sh 'cp /tmp/account-service-1.0.0.jar target/account-service-1.0.0.jar'
-                sh 'docker build -t account-service .'
+                sh "docker build -t itamar/${App_Name}:${BUILD_NUMBER} ."
+                sh "docker login -u itamar -p Aa123123"
+		        sh "docker push itamar/${App_Name}:${BUILD_NUMBER}"
             }
         }
     }
