@@ -1,9 +1,6 @@
 pipeline {
     agent {
-        docker {
-            image 'docker:stable-dind'
-            args '--privileged -d'
-        }
+            dockerfile true
     }
     stages {
         stage('Build') {
