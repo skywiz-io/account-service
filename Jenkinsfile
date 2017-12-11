@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'docker:stable-dind'
-            args '--privileged'
+            args '--privileged -d'
         }
     }
     stages {
