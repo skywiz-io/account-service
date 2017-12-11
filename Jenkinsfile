@@ -16,7 +16,6 @@ pipeline {
         stage('Build') {
             agent any 
             steps {
-                sh 'mkdir target'
                 sh 'cp /tmp/account-service-1.0.0.jar target/account-service-1.0.0.jar'
                 sh 'docker build -t account-service .'
             }
