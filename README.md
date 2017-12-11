@@ -2,6 +2,13 @@
 This service provides accounts and transactions REST API.
 This service is one part of a larger micro services example app.
 
+### Building the image
+Set the docker.repo property in pom.xml then run:
+
+```
+mvn install dockerfile:build -DskipTests
+```
+
 ### How to run
 There are 3 env variables needed for the app to run:
 1. DB_URL - url to a MySql DB. Example: jdbc:mysql://1.2.3.4:3306/accounts
@@ -10,13 +17,14 @@ There are 3 env variables needed for the app to run:
 
 ##### Run the DB:
 ```
-docker run --name devops-accounts-mysql -e MYSQL_ROOT_PASSWORD=<my-pass> -e MYSQL_DATABASE=accounts -e MYSQL_USER=<my-user> -e MYSQL_PASSWORD=<my-pass> -p 3306:3306 -d  docker-base.artifactory.restest.bank/mysql:5.7.19
-```
-    
-##### Run the App:
-```
-docker run --name devops-accounts-service -e DB_URL='jdbc:mysql://<my-server>:3306/accounts?useUnicode=true&characterEncoding=UTF-8' -e DB_USER='<my-user>' -e DB_PASSWORD='<my-pass>' -p8080:8080 docker-base.artifactory.restest.bank/account-service:1.0.0
+docker run --name devops-accounts-mysql -e MYSQL_ROOT_PASSWORD=<my-pass> -e MYSQL_DATABASE=accounts -e MYSQL_USER=<my-user> -e MYSQL_PASSWORD=<my-pass> -p 3306:3306 -d  mysql:5.7.19
 ```
 
+##### Run the App:
+```
+docker run -e DB_URL='jdbc:mysql://<my-server>:3306/accounts?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true' -e DB_USER='<my-user>' -e DB_PASSWORD='<my-pass>' -p8080:8080 <my-repo>/account-service:1.0.0
+```
+Later on the kubernetes config to run this app will be added.
+
 ### Live api test via swagger ui
-The app is deployed and can be found here: http://ttjbld01:8080/swagger-ui.html
+The app is deployed on heroku and can be found here: https://ocp-accounts-service.herokuapp.com/swagger-ui.html
