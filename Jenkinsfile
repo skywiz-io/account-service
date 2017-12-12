@@ -26,24 +26,30 @@ pipeline {
 		        sh "docker push itamar/${App_Name}:${BUILD_NUMBER}"
             }
         }
-	    stage('Deploy on openshift') {
+	    stage('Deploy on openshift And Test') {
             agent any 
             steps {
                 sh "oc login https://35.226.193.77:8443/ -u developer -p developer --insecure-skip-tls-verify=true"
                 sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER} -e ${Parameters}"
 		        sh "oc expose service ${App_Name}-v${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER}"
 		        sh "oc scale dc ${App_Name}-v${BUILD_NUMBER} --replicas=2"
+                sh "sh .tests/*.sh"
             }    
         }
-        stage('Test') {
-            agent any 
-            when {
-                   sh "sh .tests/*.sh"
-            }
-            steps {
-                echo 'Test Passed'
-            }
-        }     
+    post
+    {
+        always {
+            // Shutdown the environment
+            echo "Shutting-down the env"
+        }
+        success {
+            // Send Success mail message
+            echo "Success"
+        }
+        failure {
+            //Remove Image from repo and Send Failure message
+            echi "Failure"
+      }
     }
 }
 
