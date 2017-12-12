@@ -6,7 +6,7 @@ def oc_deploy (String project){
 	sh "oc scale dc ${App_Name}-v${BUILD_NUMBER} --replicas=2"
 }
 pipeline { 
-    agent none
+    agent any
     environment {
         App_Name    = 'account-service'
         Parameters  = "DB_URL='jdbc:mysql://devops-accounts-mysql:3306/accounts?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true' -e DB_USER='user' -e DB_PASSWORD='password'"
