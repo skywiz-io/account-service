@@ -42,19 +42,20 @@ pipeline {
     }
     post {
         always {
-            agent any 
             // Shutdown the environment
             echo "Shutting-down the env"
             //sh "for item in `oc get all | grep ${App_Name}-v${BUILD_NUMBER} |grep -v rc| awk '{print $1}'`; do oc delete $item; done"
         }
         success {
-            agent any 
             // Send Success mail message And Depoly the same version on Test project for manual QA
             echo "Success"
-            oc_deploy("test")
+            sh "oc login https://35.226.193.77:8443/ -u developer -p developer --insecure-skip-tls-verify=true"
+            sh "oc project test"
+            sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER} -e ${Parameters}"
+	        sh "oc expose service ${App_Name}-v${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER}"
+	        sh "oc scale dc ${App_Name}-v${BUILD_NUMBER} --replicas=2"
         }
         failure {
-            agent any 
             //Remove Image from repo and Send Failure message
             echo "Failure"
       }
