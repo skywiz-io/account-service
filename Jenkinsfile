@@ -10,7 +10,7 @@ def oc_delete (String project)
     sh "oc project ${project}"
     sh "oc delete deploymentconfigs/${App_Name}-v${BUILD_NUMBER}"
     sh "oc delete routes/${App_Name}-v${BUILD_NUMBER}"
-    sh "oc delete imagestreams//${App_Name}-v${BUILD_NUMBER}"
+    sh "oc delete imagestreams/${App_Name}-v${BUILD_NUMBER}"
     sh "oc delete svc/${App_Name}-v${BUILD_NUMBER}"
 }
 pipeline { 
