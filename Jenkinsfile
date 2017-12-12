@@ -42,16 +42,19 @@ pipeline {
     }
     post {
         always {
+            agent any 
             // Shutdown the environment
             echo "Shutting-down the env"
             //sh "for item in `oc get all | grep ${App_Name}-v${BUILD_NUMBER} |grep -v rc| awk '{print $1}'`; do oc delete $item; done"
         }
         success {
+            agent any 
             // Send Success mail message And Depoly the same version on Test project for manual QA
             echo "Success"
             oc_deploy("test")
         }
         failure {
+            agent any 
             //Remove Image from repo and Send Failure message
             echo "Failure"
       }
