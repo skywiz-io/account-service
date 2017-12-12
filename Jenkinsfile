@@ -41,6 +41,7 @@ pipeline {
         }
     }
     post {
+        agent any 
         always {
             // Shutdown the environment
             echo "Shutting-down the env"
