@@ -1,3 +1,10 @@
+def oc_deploy (string project){
+    sh "oc login https://35.226.193.77:8443/ -u developer -p developer --insecure-skip-tls-verify=true"
+    sh "oc project ${project}"
+    sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER} -e ${Parameters}"
+	sh "oc expose service ${App_Name}-v${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER}"
+	sh "oc scale dc ${App_Name}-v${BUILD_NUMBER} --replicas=2"
+}
 pipeline { 
     agent none
     environment {
@@ -22,17 +29,13 @@ pipeline {
             steps {
                 sh 'cp /tmp/account-service-1.0.0.jar target/account-service-1.0.0.jar'
                 sh "docker build -t itamar/${App_Name}:${BUILD_NUMBER} ."
-                //sh "docker login -u itamar -p Aa123123"
 		        sh "docker push itamar/${App_Name}:${BUILD_NUMBER}"
             }
         }
 	    stage('Deploy on openshift And Test') {
             agent any 
             steps {
-                sh "oc login https://35.226.193.77:8443/ -u developer -p developer --insecure-skip-tls-verify=true"
-                sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER} -e ${Parameters}"
-		        sh "oc expose service ${App_Name}-v${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER}"
-		        sh "oc scale dc ${App_Name}-v${BUILD_NUMBER} --replicas=2"
+                oc_deploy("dev")
                 sh "sh .tests/*.sh"
             }    
         }
@@ -41,10 +44,12 @@ pipeline {
         always {
             // Shutdown the environment
             echo "Shutting-down the env"
+            sh "for item in `oc get all | grep ${App_Name}-v${BUILD_NUMBER} |grep -v rc| awk '{print $1}'`; do oc delete $item; done"
         }
         success {
-            // Send Success mail message
+            // Send Success mail message And Depoly the same version on Test project for manual QA
             echo "Success"
+            oc_deploy("test")
         }
         failure {
             //Remove Image from repo and Send Failure message
