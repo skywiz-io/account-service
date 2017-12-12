@@ -30,9 +30,9 @@ pipeline {
             agent any 
             steps {
                 sh "oc login https://35.226.193.77:8443/ -u developer -p developer --insecure-skip-tls-verify=true"
-                sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${version} -e ${Parameters}"
-		        sh "oc expose service ${App_Name}-v${version} --name ${App_Name}-v${version}"
-		        sh "oc scale dc ${App_Name}-v${version} --replicas=${replicas}"
+                sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER} -e ${Parameters}"
+		        sh "oc expose service ${App_Name}-v${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER}"
+		        sh "oc scale dc ${App_Name}-v${BUILD_NUMBER} --replicas=${replicas}"
             }
         }
     }
