@@ -22,7 +22,7 @@ pipeline {
             steps {
                 sh 'cp /tmp/account-service-1.0.0.jar target/account-service-1.0.0.jar'
                 sh "docker build -t itamar/${App_Name}:${BUILD_NUMBER} ."
-                sh "docker login -u itamar -p Aa123123"
+                //sh "docker login -u itamar -p Aa123123"
 		        sh "docker push itamar/${App_Name}:${BUILD_NUMBER}"
             }
         }
@@ -48,7 +48,7 @@ pipeline {
         }
         failure {
             //Remove Image from repo and Send Failure message
-            echi "Failure"
+            echo "Failure"
       }
     }
 }
