@@ -1,4 +1,4 @@
-def oc_deploy (string project){
+def oc_deploy (String project){
     sh "oc login https://35.226.193.77:8443/ -u developer -p developer --insecure-skip-tls-verify=true"
     sh "oc project ${project}"
     sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER} -e ${Parameters}"
