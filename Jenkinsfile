@@ -38,7 +38,7 @@ pipeline {
                 }
                 catch (exc) {
                     echo 'Test Failed - Removing docker image from repo'
-                throw
+                throw e;
                 }
                 echo "Test Passed - Shutting down Dev env and creating Test Env"
             }                
