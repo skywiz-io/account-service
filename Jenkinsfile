@@ -5,6 +5,14 @@ def oc_deploy (String project){
 	sh "oc expose service ${App_Name}-v${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER}"
 	sh "oc scale dc ${App_Name}-v${BUILD_NUMBER} --replicas=2"
 }
+def oc_delete (String project)
+{
+    sh "oc project ${project}"
+    sh "oc delete deploymentconfigs/${App_Name}-v${BUILD_NUMBER}"
+    sh "oc delete routes/${App_Name}-v${BUILD_NUMBER}"
+    sh "oc delete imagestreams//${App_Name}-v${BUILD_NUMBER}"
+    sh "oc delete svc/${App_Name}-v${BUILD_NUMBER}"
+}
 pipeline { 
     agent any
     environment {
@@ -44,7 +52,7 @@ pipeline {
         always {
             // Shutdown the environment
             echo "Shutting-down the env"
-            //sh "for item in `oc get all | grep ${App_Name}-v${BUILD_NUMBER} |grep -v rc| awk '{print $1}'`; do oc delete $item; done"
+            oc_delete(dev)
         }
         success {
             // Send Success mail message And Depoly the same version on Test project for manual QA
