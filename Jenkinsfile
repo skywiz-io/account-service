@@ -33,7 +33,7 @@ pipeline {
                 sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER} -e ${Parameters}"
 		        sh "oc expose service ${App_Name}-v${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER}"
 		        sh "oc scale dc ${App_Name}-v${BUILD_NUMBER} --replicas=2"
-                def TestsStatus = sh ".tests/*.sh , returnStatus:true"
+                TestsStatus = sh ".tests/*.sh , returnStatus:true"
                 if (TestsStatus){
                     echo "Test passed"
                 }
