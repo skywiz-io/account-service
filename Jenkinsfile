@@ -33,7 +33,7 @@ pipeline {
                 sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER} -e ${Parameters}"
 		        sh "oc expose service ${App_Name}-v${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER}"
 		        sh "oc scale dc ${App_Name}-v${BUILD_NUMBER} --replicas=2"
-                sh ".tests/*.sh"
+                sh "bash .tests/*.sh"
             }                
         }
     }
