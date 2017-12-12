@@ -37,12 +37,11 @@ pipeline {
         }
         stage('Test') {
             agent any 
-            try {
+            when {
                    sh "sh .tests/*.sh"
             }
-            catch (exc) {
-                echo 'Test Failed - Removing docker image from repo'
-                throw e;
+            steps {
+                echo 'Test Passed'
             }
         }     
     }
