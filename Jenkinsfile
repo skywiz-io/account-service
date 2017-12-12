@@ -2,6 +2,7 @@ pipeline {
     agent none
     environment {
         App_Name    = 'account-service'
+        Parameters  = "DB_URL='jdbc:mysql://devops-accounts-mysql:3306/accounts?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true' -e DB_USER='user' -e DB_PASSWORD='password'"
     }
     stages {
         stage('Maven Build') {
@@ -29,10 +30,11 @@ pipeline {
             agent any 
             steps {
                 sh "oc login https://35.226.193.77:8443/ -u developer -p developer --insecure-skip-tls-verify=true"
-		sh "oc project dev"
-		sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${version}"
-		sh "oc expose service ${App_Name}-v${version} --name ${App_Name}-v${version}"
-		sh "oc scale dc ${App_Name}-v${version} --replicas=${replicas}"
+		        /*sh "oc project dev"
+		        sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${version}"*/
+                sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${version} -e ${Parameters}"
+		        sh "oc expose service ${App_Name}-v${version} --name ${App_Name}-v${version}"
+		        sh "oc scale dc ${App_Name}-v${version} --replicas=${replicas}"
             }
         }
     }
