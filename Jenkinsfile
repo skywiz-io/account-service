@@ -52,7 +52,7 @@ pipeline {
         always {
             // Shutdown the environment
             echo "Shutting-down the env"
-            oc_delete(dev)
+            oc_delete("dev")
         }
         success {
             // Send Success mail message And Depoly the same version on Test project for manual QA
