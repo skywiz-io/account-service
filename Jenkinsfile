@@ -49,12 +49,7 @@ pipeline {
         success {
             // Send Success mail message And Depoly the same version on Test project for manual QA
             echo "Success"
-            sh "echo itamar"
-            /*sh "oc login https://35.226.193.77:8443/ -u developer -p developer --insecure-skip-tls-verify=true"
-            sh "oc project test"
-            sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER} -e ${Parameters}"
-	        sh "oc expose service ${App_Name}-v${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER}"
-	        sh "oc scale dc ${App_Name}-v${BUILD_NUMBER} --replicas=2"*/
+            oc_deploy("test")
         }
         failure {
             //Remove Image from repo and Send Failure message
