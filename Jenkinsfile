@@ -36,8 +36,8 @@ pipeline {
                 sh "sh .tests/*.sh"
             }    
         }
-    post
-    {
+    }
+    post {
         always {
             // Shutdown the environment
             echo "Shutting-down the env"
