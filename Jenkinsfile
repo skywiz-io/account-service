@@ -1,7 +1,7 @@
 def oc_deploy (String project){
     sh "oc login https://35.226.193.77:8443/ -u developer -p developer --insecure-skip-tls-verify=true"
     sh "oc project ${project}"
-    sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER} --param-file=param_file"
+    sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER} --env-file=param_file"
     sh "oc deploy ${App_Name}-v${BUILD_NUMBER} --cancel"
     sh "oc env dc/${App_Name}-v${BUILD_NUMBER} --from=secret/db-password"
     sh "oc deploy ${App_Name}-v${BUILD_NUMBER} --cancel=false"
