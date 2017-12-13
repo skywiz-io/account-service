@@ -1,9 +1,9 @@
 def oc_deploy (String project){
     sh "oc login https://35.226.193.77:8443/ -u developer -p developer --insecure-skip-tls-verify=true"
     sh "oc project ${project}"
-    //sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER} -e ${Parameters}"
     sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER} --env-file=param_file"
-	sh "oc expose service ${App_Name}-v${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER}"
+	sh "oc env dc/${App_Name}-v${BUILD_NUMBER} --from=secret/db-password"
+    sh "oc expose service ${App_Name}-v${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER}"
 	sh "oc scale dc ${App_Name}-v${BUILD_NUMBER} --replicas=2"
 }
 def oc_delete (String project)
@@ -18,7 +18,6 @@ pipeline {
     agent any
     environment {
         App_Name    = 'account-service'
-        //Parameters  = "DB_URL='jdbc:mysql://devops-accounts-mysql:3306/accounts?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true' -e DB_USER='user' -e DB_PASSWORD='password'"
     }
     stages {
         stage('Maven Build') {

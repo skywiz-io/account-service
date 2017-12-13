@@ -1,3 +1,2 @@
 DB_URL='jdbc:mysql://devops-accounts-mysql:3306/accounts?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true'
 DB_USER="user"
-DB_PASSWORD="password"
