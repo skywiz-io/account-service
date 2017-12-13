@@ -17,6 +17,7 @@ pipeline {
     agent any
     environment {
         App_Name    = 'account-service'
+        Parameters  = "DB_URL='jdbc:mysql://devops-accounts-mysql:3306/accounts?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true' -e DB_USER='user' -e DB_PASSWORD='password'"
     }
     stages {
         stage('Maven Build') {
@@ -64,4 +65,3 @@ pipeline {
       }
     }
 }
-
