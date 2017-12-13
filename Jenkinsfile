@@ -5,8 +5,7 @@ def oc_deploy (String project){
     sh "oc env dc/${App_Name}-v${BUILD_NUMBER} --from=secret/db-password"
     sh "sleep 5"
     sh "oc rollout cancel dc/${App_Name}-v${BUILD_NUMBER} || echo 'nothing running'"
-    sh "sleep 5"
-    sh "oc rollout latest dc/${App_Name}-v${BUILD_NUMBER}"
+    //sh "oc rollout latest dc/${App_Name}-v${BUILD_NUMBER}"
 	sh "oc expose service ${App_Name}-v${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER}"
 	sh "oc scale dc ${App_Name}-v${BUILD_NUMBER} --replicas=2"
 }
