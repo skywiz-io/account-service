@@ -4,6 +4,7 @@ def oc_deploy (String project){
     sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER} --param-file=param_file"
     sh "oc deploy ${App_Name}-v${BUILD_NUMBER} --cancel"
     sh "oc env dc/${App_Name}-v${BUILD_NUMBER} --from /tmp/secret-map.yml"
+    sh "oc deploy ${App_Name}-v${BUILD_NUMBER} --cancel=false"
 	sh "oc expose service ${App_Name}-v${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER}"
 	sh "oc scale dc ${App_Name}-v${BUILD_NUMBER} --replicas=2"
 }
