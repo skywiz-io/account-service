@@ -1,11 +1,7 @@
 def oc_deploy (String project){
     sh "oc login https://35.226.193.77:8443/ -u developer -p developer --insecure-skip-tls-verify=true"
     sh "oc project ${project}"
-    sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER} --env-file=param_file"
-    sh "oc env dc/${App_Name}-v${BUILD_NUMBER} --from=secret/db-password"
-    sh "sleep 5"
-    sh "oc rollout cancel dc/${App_Name}-v${BUILD_NUMBER} || echo 'nothing running'"
-    //sh "oc rollout latest dc/${App_Name}-v${BUILD_NUMBER}"
+    sh "oc new-app itamar/${App_Name}:${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER} -e ${Parameters}"
 	sh "oc expose service ${App_Name}-v${BUILD_NUMBER} --name ${App_Name}-v${BUILD_NUMBER}"
 	sh "oc scale dc ${App_Name}-v${BUILD_NUMBER} --replicas=2"
 }
